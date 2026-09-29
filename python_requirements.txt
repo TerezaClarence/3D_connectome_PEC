@@ -1,0 +1,38 @@
+# Python dependencies used across the repository.
+# Versions are intentionally not pinned at this stage.
+#
+# NOTE: The repository contains both legacy Python 2-era mirnylib scripts
+# and newer Python 3 tools (HiCExplorer / MDkNN). A single environment is
+# therefore not guaranteed to support every workflow unchanged.
+
+# Core scientific Python
+numpy
+scipy
+matplotlib
+pandas
+
+# Legacy mirnylib workflows used by:
+#   4juicebox_example.py
+#   hdf5_subsample_seed_example.py
+h5py
+biopython
+joblib
+bx-python
+Cython
+git+https://github.com/mirnylab/mirnylib-legacy.git
+
+# HiCExplorer command-line tools used by:
+#   run_cis_decay.sh        -> hicPlotDistVsCounts
+#   run_hicFindTAD_param_sweep.sh -> hicFindTADs
+#   run_svl.sh              -> hicPlotSVL
+HiCExplorer
+
+# MDkNN dependencies used by run_mdknn_dod.sh / mdknn.py
+scikit-learn
+statsmodels
+tqdm
+cooler
+
+# Repository-local/external code that is required but is not a pip package:
+#   myut      - imported by the legacy mirnylib scripts
+#   mdknn.py  - MDkNN script from https://github.com/GangCaoLab/MDkNN
