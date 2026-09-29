@@ -97,6 +97,8 @@ Rscript run_timecompare.R manifest.tsv 100000 sample results/timecompare
 ## Notes
 
 These scripts are provided as reusable analysis examples. Input paths, output locations, genome references, matrix resolutions, and analysis parameters should be adjusted as appropriate for the dataset being analyzed.examples. Input paths, output locations, genome references, matrix resolutions, and analysis parameters should be adjusted as appropriate for the dataset being analyzed.
+
+
 ---
 
 ## 📝 Citation
