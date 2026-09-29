@@ -2,7 +2,7 @@
 
 Analysis scripts and reproducibility resources for the PsychENCODE Hi-C lifespan atlas (2026–2027).
 
-# PsychENCODE Hi-C Lifespan Manuscript
+# PsychENCODE Hi-C Lifespan Connectome Manuscript
 
 [![Repository status](https://img.shields.io/badge/status-in%20development-orange)](#)
 [![Data](https://img.shields.io/badge/data-Synapse-blue)](#data-availability)
@@ -19,19 +19,6 @@ Analysis-specific scripts are maintained at the repository root so that individu
 
 ---
 
-## 📦 Data availability
-
-Hi-C contact matrices, supplementary tables, and supplementary data associated with this manuscript are deposited in Synapse:
-
-* **Synapse ID:** `synID XXX`
-* **Synapse repository:** [XXX](XXX)
-
-Chrom3D-derived three-dimensional genome models are deposited in the same Synapse repository.
-
-> **Note:** Access to some data may be subject to the data-use, governance, or controlled-access requirements of the original PsychENCODE datasets.
-
----
-
 ## 💻 Software environments
 
 Package versions used for the analyses are provided in the following files:
@@ -43,178 +30,73 @@ We recommend recreating the documented software environments before running the 
 
 ---
 
-## 🗂️ Repository structure
-
-```text
-.
-├── celltype_pseudobulk_prep.R
-├── run_hicrep.R
-├── run_cis_decay.sh
-├── run_svl.sh
-├── 3DG_spatial_analysis.py
-├── run_calder2.R
-├── lifespan_category_subcpt.py
-├── gsea_subcpt.R
-├── avgGEX_BioModule.R
-├── run_timecompare.R
-├── TADtree.R
-├── run_mdknn_dod.sh
-├── TADdynamics_BioModule.R
-├── DoD_BioModule.R
-├── gnocchi_analysis.R
-├── gnomAD_LOEUF_analysis.R
-├── STR_analysis.R
-├── multiomic_mapping_prioritizedSTRloci.R
-│
-├── FIG1/
-│   └── FIG1_plots.ipynb
-├── FIG2/
-│   └── FIG2_plots.ipynb
-├── FIG3/
-│   └── FIG3_plots.ipynb
-├── FIG4/
-│   └── FIG4_plots.ipynb
-├── FIG5/
-│   └── FIG5_plots.ipynb
-│
-├── python_requirements.txt
-├── R_requirements.txt
-└── README.md
-```
-
-The analysis scripts are intentionally kept separate from the manuscript figure directories. This allows workflows such as HiCRep, CALDER2, TimeCompare, MDkNN/DoD, constraint analyses, and Chrom3D spatial analyses to be run independently and reused across downstream analyses.
-
----
-
 ## 🔬 Analysis scripts
 
-### Hi-C preprocessing, quality control, and interaction scaling
 
-| File | Description |
+Analysis scripts used for Hi-C processing and downstream 3D genome analyses in the PsychENCODE lifespan project.
+This repository contains reusable example scripts for Hi-C format conversion and subsampling, reproducibility analysis, contact-distance analyses, subcompartment inference, TAD calling and temporal comparison, and degree-of-disorder analysis.
+
+| Script | Description |
 | --- | --- |
-| `celltype_pseudobulk_prep.R` | Example workflow for preparing cell type- and age group-specific pseudobulk Hi-C matrices. |
-| `run_hicrep.R` | HiCRep analysis for quantifying concordance between Hi-C contact matrices. |
-| `run_cis_decay.sh` | Genomic distance-dependent contact-frequency analysis using HiCExplorer. |
-| `run_svl.sh` | Short-range versus long-range interaction analysis using HiCExplorer. |
+| `4juicebox_example.py` | Converts refined Hi-C HDF5 interaction data into a sorted gzipped text representation suitable for downstream Juicebox/Juicer-style processing. |
+| `hdf5_subsample_seed_example.py` | Randomly subsamples Hi-C interactions stored in HDF5 format using a fixed random seed for reproducibility. |
+| `run_hicrep.R` | Calculates pairwise Hi-C reproducibility using HiCRep, with optional depth adjustment/subsampling. |
+| `run_cis_decay.sh` | Calculates contact probability as a function of genomic distance using HiCExplorer `hicPlotDistVsCounts`. |
+| `run_svl.sh` | Calculates short-to-long-range contact ratios using HiCExplorer `hicPlotSVL`. |
+| `run_calder2.R` | Runs CALDER2 compartment and subcompartment inference from Juicer `.hic` files. |
+| `run_hicFindTAD_param_sweep.sh` | Calls TADs with HiCExplorer `hicFindTADs` across combinations of FDR and delta thresholds while reusing the separation score. |
+| `run_timecompare.R` | Performs temporal TAD-boundary analysis using `TADCompare::TimeCompare` from sparse contact matrices supplied through a manifest file. |
+| `run_mdknn_dod.sh` | Runs MDkNN degree-of-disorder analysis across a collection of TAD BED files. |
 
-### Three-dimensional genome organization
 
-| File | Description |
-| --- | --- |
-| `3DG_spatial_analysis.py` | Spatial analysis of Chrom3D-derived genome models, including genomic-region colocalization and model-stability analyses. |
+## Software requirements
 
-### Subcompartment analyses
+Package lists are provided without pinned versions at this stage:
 
-| File | Description |
-| --- | --- |
-| `run_calder2.R` | Chromatin compartment and subcompartment inference using CALDER2. |
-| `lifespan_category_subcpt.py` | Assignment of lifespan subcompartment category labels. |
-| `gsea_subcpt.R` | Gene-set enrichment analysis of selected subcompartment categories. |
-| `avgGEX_BioModule.R` | Preparation of average cell type- and age group-specific gene-expression values for biological modules used in downstream analyses. |
+- [`python_requirements.txt`](python_requirements.txt): Python packages used by the included Python scripts
+- [`R_requirements.txt`](R_requirements.txt): R packages used by the included R scripts
 
-### TAD and boundary analyses
+The shell workflows additionally require the corresponding command-line software to be installed and available in `PATH`, including **HiCExplorer** for `hicPlotDistVsCounts`, `hicPlotSVL`, and `hicFindTADs`.
 
-| File | Description |
-| --- | --- |
-| `run_timecompare.R` | Temporal TAD-boundary analysis and lifespan category assignment using TimeCompare. |
-| `TADtree.R` | Hierarchical TAD analysis, including evaluation of nested TAD organization. |
-| `run_mdknn_dod.sh` | MDkNN-based degree-of-disorder analysis for TADs and TAD boundaries. |
-| `TADdynamics_BioModule.R` | Downstream analysis of selected biological modules across lifespan TAD categories. |
-| `DoD_BioModule.R` | Downstream analysis of selected biological modules in relation to TAD degree of disorder. |
+`run_mdknn_dod.sh` additionally expects the MDkNN Python script (`mdknn.py`) to be available locally or supplied as an argument.
 
-### Functional constraint and disease-associated loci
+The legacy Python conversion/subsampling scripts use `mirnylib` and a local helper module named `myut`; the latter is project-specific and is therefore not listed as an installable Python package.
 
-| File | Description |
-| --- | --- |
-| `gnocchi_analysis.R` | Analysis of Gnocchi noncoding constraint scores across TAD categories. |
-| `gnomAD_LOEUF_analysis.R` | Analysis of gnomAD LOEUF gene-constraint scores across TAD categories. |
-| `STR_analysis.R` | Analysis of disease-associated short tandem repeat loci across TAD categories. |
-| `multiomic_mapping_prioritizedSTRloci.R` | Multiomic integration and locus-level analysis of prioritized short tandem repeat loci. |
+## Basic usage
 
----
+Each script contains its own command-line usage and example invocation in the header. For example:
 
-## 🧬 Figure 1: Hi-C atlas generation and data quality
+```bash
+bash run_cis_decay.sh sample.cool sample results/cis_decay
+```
 
-The `FIG1` directory contains the notebook used to reproduce selected key panels from Figure 1.
+```bash
+bash run_svl.sh sample_40kb.h5 40000 results/SVL 4
+```
 
-| File | Description |
-| --- | --- |
-| `FIG1_plots.ipynb` | Reproduction of selected Figure 1 panels from deposited supplementary data. |
+```bash
+bash run_hicFindTAD_param_sweep.sh sample_50kb.cool results/TADs 4
+```
 
-Relevant upstream analyses include pseudobulk Hi-C preparation and HiCRep concordance analysis.
+```bash
+bash run_mdknn_dod.sh sample.cool tads/ results/DoD/
+```
 
----
+```bash
+Rscript run_calder2.R sample.hic results/CALDER 50000 hg38 4
+```
 
-## 🌐 Figure 2: Interaction scaling and three-dimensional genome organization
+```bash
+Rscript run_hicrep.R sample1.hic sample2.hic sample1 sample2 100000 results/hicrep
+```
 
-The `FIG2` directory contains the notebook used to reproduce selected key panels from Figure 2.
+```bash
+Rscript run_timecompare.R manifest.tsv 100000 sample results/timecompare
+```
 
-| File | Description |
-| --- | --- |
-| `FIG2_plots.ipynb` | Reproduction of selected Figure 2 panels from deposited supplementary data and Chrom3D-derived outputs. |
+## Notes
 
-Relevant upstream analyses include cis-decay, short-versus-long-range interaction analysis, and Chrom3D spatial analyses.
-
----
-
-## 🧭 Figure 3: Lifespan subcompartment dynamics
-
-The `FIG3` directory contains the notebook used to reproduce selected key panels from Figure 3.
-
-| File | Description |
-| --- | --- |
-| `FIG3_plots.ipynb` | Reproduction of selected Figure 3 panels from deposited supplementary data. |
-
-Relevant upstream analyses include CALDER2 subcompartment inference, lifespan subcompartment classification, gene-set enrichment, and integration with cell type- and age group-resolved gene expression.
-
----
-
-## 🏗️ Figure 4: TAD dynamics, hierarchy, and degree of disorder
-
-The `FIG4` directory contains the notebook used to reproduce selected key panels from Figure 4.
-
-| File | Description |
-| --- | --- |
-| `FIG4_plots.ipynb` | Reproduction of selected Figure 4 panels from deposited supplementary data. |
-
-Relevant upstream analyses include TimeCompare-based lifespan TAD classification, hierarchical TAD analysis, MDkNN-based degree-of-disorder analysis, and downstream biological-module analyses.
-
----
-
-## 🧩 Figure 5: Functional constraint and disease-associated repeat loci
-
-The `FIG5` directory contains the notebook used to reproduce selected key panels from Figure 5.
-
-| File | Description |
-| --- | --- |
-| `FIG5_plots.ipynb` | Reproduction of selected Figure 5 panels from deposited supplementary data. |
-
-Relevant upstream analyses include integration of TAD categories with noncoding constraint, gene-level loss-of-function constraint, disease-associated short tandem repeat loci, and multiomic data.
-
----
-
-## 🧊 Chrom3D modelling tutorial
-
-A separate tutorial describing the Chrom3D modelling workflow is available in the following repository:
-
-* **Chrom3D tutorial:** [XXX](XXX)
-
-The tutorial repository provides detailed guidance for generating Chrom3D models. The present repository focuses on downstream spatial analyses of the Chrom3D-derived models used in the manuscript.
-
----
-
-## ▶️ Reproducing manuscript figures
-
-To reproduce selected manuscript plots:
-
-1. Obtain the required supplementary tables, supplementary data, contact matrices, and model outputs from the Synapse repository.
-2. Recreate the relevant R and Python software environments using `R_requirements.txt` and `python_requirements.txt`.
-3. Run the relevant analysis script(s) from the repository root when upstream analysis outputs are required.
-4. Open the corresponding `FIG1`–`FIG5` Jupyter notebook.
-5. Follow the notebook instructions to reproduce selected key manuscript panels from the deposited data and analysis outputs.
-
-The figure notebooks are intended to provide transparent and lightweight examples of figure generation. Computationally intensive upstream analyses, including Hi-C matrix processing, temporal TAD analysis, and three-dimensional genome modelling, are kept separate from the figure notebooks and may require additional computing resources.
-
+These scripts are provided as reusable analysis examples. Input paths, output locations, genome references, matrix resolutions, and analysis parameters should be adjusted as appropriate for the dataset being analyzed.examples. Input paths, output locations, genome references, matrix resolutions, and analysis parameters should be adjusted as appropriate for the dataset being analyzed.
 ---
 
 ## 📝 Citation
