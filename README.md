@@ -15,7 +15,10 @@ This repository contains analysis scripts and figure-reproduction notebooks asso
 > **Authors:** XXX  
 > **Citation:** XXX
 
-Analysis-specific scripts are maintained at the repository root so that individual workflows can be reused independently of manuscript figure organization. The `FIG1`–`FIG5` directories contain only Jupyter notebooks for reproducing selected key panels from the deposited supplementary tables and supplementary data.
+Supplemental Data for corresponding study can be found under Synapse with corresponding synID:
+**syn77646120** (Supplemental Data 1)
+**syn77646126** (Supplemental Data 2)
+**syn77646128** (Supplemental Data 3)
 
 ---
 
